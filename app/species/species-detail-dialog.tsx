@@ -7,10 +7,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { Database } from "@/lib/schema";
+import Image from "next/image";  // Add this import at the top
 
 type Species = Database["public"]["Tables"]["species"]["Row"];
 
-type SpeciesDetailDialogProps = {
+interface SpeciesDetailDialogProps{
   species: Species;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -30,11 +31,12 @@ export default function SpeciesDetailDialog({
         
         <div className="grid w-full gap-4">
           {species.image && (
-            <div className="flex justify-center">
-              <img 
+            <div className="relative w-full h-64">
+              <Image 
                 src={species.image} 
                 alt={species.common_name ?? species.scientific_name}
-                className="rounded-lg object-cover max-h-64 w-full"
+                fill
+                className="rounded-lg object-cover"
               />
             </div>
           )}

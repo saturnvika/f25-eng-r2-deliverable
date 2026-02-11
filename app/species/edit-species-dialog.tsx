@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -50,7 +49,7 @@ const speciesSchema = z.object({
 
 type FormData = z.infer<typeof speciesSchema>;
 
-type EditSpeciesDialogProps = {
+interface EditSpeciesDialogProps{
   species: Species;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -59,7 +58,6 @@ type EditSpeciesDialogProps = {
 export default function EditSpeciesDialog({ species, open, onOpenChange }: EditSpeciesDialogProps) {
   const router = useRouter();
 
-  // Pre-populate form with existing species data
   const defaultValues: Partial<FormData> = {
     scientific_name: species.scientific_name,
     common_name: species.common_name,
@@ -78,7 +76,6 @@ export default function EditSpeciesDialog({ species, open, onOpenChange }: EditS
   const onSubmit = async (input: FormData) => {
     const supabase = createBrowserSupabaseClient();
     
-    // Update the species instead of inserting
     const { error } = await supabase
       .from("species")
       .update({
@@ -89,7 +86,7 @@ export default function EditSpeciesDialog({ species, open, onOpenChange }: EditS
         image: input.image,
         description: input.description,
       })
-      .eq("id", species.id); // Update only this specific species
+      .eq("id", species.id);
 
     if (error) {
       return toast({
@@ -99,10 +96,8 @@ export default function EditSpeciesDialog({ species, open, onOpenChange }: EditS
       });
     }
 
-    // Close the dialog
     onOpenChange(false);
 
-    // Refresh to show updated data
     router.refresh();
 
     return toast({
